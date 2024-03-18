@@ -1,0 +1,73 @@
+per ubuntu:
+
+# This is a GitHub action that checks if README.md contains your name before committing
+name: README-checker
+on: [push]
+jobs:
+  check-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          pip install PyGithub
+      - name: Check README.md
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USER_NAME: ${{ github.actor }}
+        run: |
+          from github import Github
+          import os
+          g = Github(os.environ["GITHUB_TOKEN"])
+          repo = g.get_repo(f"{os.environ['USER_NAME']}/{os.environ['GITHUB_REPOSITORY']}")
+          readme = repo.get_contents("README.md")
+          readme_content = readme.decoded_content.decode()
+          if os.environ["USER_NAME"] in readme_content:
+            print("README.md contains your name. Committing...")
+          else:
+            print("README.md does not contain your name. Aborting commit...")
+            exit(1)
+
+per windows:
+
+# This is a basic workflow to help you get started with GitHub Actions
+
+name: Check README
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This job runs on a Windows runner
+  check-readme:
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a PowerShell script to check if README.md contains the word scolombi
+      - name: Check README
+        run: |
+          $readme = Get-Content README.md
+          if ($readme -match "scolombi") {
+            Write-Output "README contains scolombi"
+          } else {
+            Write-Error "README does not contain scolombi"
+            exit 1
+          }

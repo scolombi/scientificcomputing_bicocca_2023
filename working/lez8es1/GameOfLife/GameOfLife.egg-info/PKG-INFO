@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: GameOfLife
+Version: 0.0.1
+Summary: test module for the SciComp class
+Home-page: https://github.com/scolombi
+Author: Stefano Colombi
+Author-email: s.colombi11@campus.unimib.it
+License: MIT
+Requires-Dist: numpy
+Requires-Dist: matplotlib

@@ -1,0 +1,2 @@
+git commit -m --> per non passare dall'editor
+:x per salvare modifiche nell'editor ed uscire
